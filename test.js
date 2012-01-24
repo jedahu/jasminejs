@@ -12,6 +12,8 @@ phantom.injectJs('out/all.js');
 
 var fs = require('fs');
 
+maybeTestQc();
+
 jasmine.getEnv().addReporter(
     new jasmine.ConsoleReporter(
       function(msg) { fs.write('/dev/stdout', msg, 'w'); },
@@ -28,4 +30,32 @@ try {
   jasmine.getEnv().execute();
 } catch (e) {
   phantom.exit(1);
+}
+
+function maybeTestQc() {
+  if (typeof qc !== 'undefined' &&
+      typeof qc.allProps !== 'undefined' &&
+      qc.allProps.length > 0) {
+    var conf = new qc.Config({});
+    describe('quickcheck tests', function() {
+      beforeEach(function() {
+        this.addMatchers({
+          toPass: function() {
+            var result = this.actual;
+            this.message = function() {
+              return result.name+' failed on '+result.failedCase+
+                (result.shrinkedArgs ? ' mincase '+result.shrinkedArgs : '');
+            };
+            return result.status !== 'fail';
+          }
+        });
+      });
+      it('should pass', function() {
+        for (var i = 0; i < qc.allProps.length; ++i) {
+          var result = qc.allProps[i].run(conf);
+          expect(result).toPass();
+        }
+      });
+    });
+  }
 }
