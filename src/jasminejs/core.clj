@@ -1,4 +1,4 @@
-(ns me.panzoo.jasmine)
+(ns jasminejs.core)
 
 (defmacro before [& body]
   `((aget js/window "beforeEach") (fn [] ~@body)))

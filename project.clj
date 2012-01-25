@@ -1,4 +1,4 @@
 (defproject
-  me.panzoo/jasmine "0.0.1-SNAPSHOT"
+  jasminejs "0.1.0-SNAPSHOT"
 
   :description "Jasmine macros for clojurescript.")
