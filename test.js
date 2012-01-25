@@ -8,6 +8,7 @@
 
 phantom.injectJs('jasmine/jasmine.js');
 phantom.injectJs('jasmine/ConsoleReporter.js');
+phantom.injectJs('quickcheck/qc.js');
 phantom.injectJs('out/all.js');
 
 var fs = require('fs');
@@ -34,8 +35,7 @@ try {
 
 function maybeTestQc() {
   if (typeof qc !== 'undefined' &&
-      typeof qc.allProps !== 'undefined' &&
-      qc.allProps.length > 0) {
+      typeof qc.allProps !== 'undefined') {
     var conf = new qc.Config({});
     describe('quickcheck tests', function() {
       beforeEach(function() {

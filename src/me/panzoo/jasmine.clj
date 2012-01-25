@@ -38,12 +38,12 @@
   `(before
      (let [this# (~'js* "this")]
        (.call (aget this# "addMatchers")
-          this#
-          (.strobj {~name (fn [expected#]
-                          (let [this# (~'js* "this")
-                                actual# (aget this# "actual")]
-                            (aset this# "message" #(~msg expected# actual#))
-                            (~pred expected# actual#)))})))))
+              this#
+              (.-strobj {~name (fn [expected#]
+                                 (let [this# (~'js* "this")
+                                       actual# (aget this# "actual")]
+                                   (aset this# "message" #(~msg expected# actual#))
+                                   (~pred expected# actual#)))})))))
 
 (defmacro check [s & body]
   `((aget js/window "describe")

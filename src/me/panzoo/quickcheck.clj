@@ -1,7 +1,11 @@
 (ns me.panzoo.quickcheck)
 
 (defmacro gen* [path]
-  `((.. (.generator js/qc) ~@path)))
+  `(~(reduce
+       (fn [form segment]
+         `(aget ~form ~segment))
+       'js/qc
+       (map name path))))
 
 (defmacro gen [& path]
   `(gen* ~path))
@@ -12,10 +16,10 @@
        (gen* p#))))
 
 (defmacro qcheck [title gens f]
-  `(.declare js/qc ~title (.array ~gens) ~f))
+  `(.call (aget (aget js/window "qc") "declare") nil ~title (. ~gens -array) ~f))
 
 (defmacro note-arg [tcase a]
-  `(.noteArg ~tcase ~a))
+  `(.call (aget ~tcase "noteArg") ~tcase ~a))
 
 (defmacro invariant [tcase bool]
-  `(.assert ~tcase ~bool))
+  `(.call (aget ~tcase "assert") ~tcase ~bool))
