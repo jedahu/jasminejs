@@ -45,13 +45,16 @@
                                    (aset this# "message" #(~msg expected# actual#))
                                    (~pred expected# actual#)))})))))
 
-(defmacro check [s & body]
+(defmacro describe [s & body]
   `((aget js/window "describe")
       ~s
       (fn []
         (add-matcher "=" = #(str "Expected: " (pr-str %1)
                                  ". Actual: " (pr-str %2)))
         ~@body)))
+
+(defmacro check [s & body]
+  `(describe ~s ~@body))
 
 (defmacro it [s & body]
   `((aget js/window "it") ~s
